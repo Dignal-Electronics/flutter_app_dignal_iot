@@ -14,6 +14,7 @@ class DevicesDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final devicesProvider = Provider.of<DevicesProvider>(context, listen: true);
+    devicesProvider.initSocket();
 
     return Scaffold(
       appBar: AppBar(
@@ -24,11 +25,49 @@ class DevicesDetailScreen extends StatelessWidget {
   }
 }
 
+
+class TemperatureSerie {
+  final DateTime time;
+  final double data;
+
+  TemperatureSerie({required this.time, required this.data});
+}
+
 class _DeviceDetail extends StatelessWidget {
   const _DeviceDetail({super.key});
 
+  Color getColorStatus(status) {
+    // status = online | offline
+    if (status == WebsocketConnectionStatus.online) {
+      return Colors.green;
+    }
+
+    if (status == WebsocketConnectionStatus.offline) {
+      return Colors.red;
+    }
+
+    return Colors.amber;
+  }
+
+
+  String getStatus(status) {
+    if (status == WebsocketConnectionStatus.online) {
+      return 'Conectado';
+    }
+
+    if (status == WebsocketConnectionStatus.offline) {
+      return 'Desconectado';
+    }
+
+    return 'Desconocido';
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    final devicesProvider = Provider.of<DevicesProvider>(context, listen: true);
+    bool led = devicesProvider.led;
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -40,10 +79,10 @@ class _DeviceDetail extends StatelessWidget {
                 SizedBox(
                   child: Row(
                     children: [
-                      Text('Status'),
+                      Text(getStatus(devicesProvider.websocketConnection)),
                       Icon(
                         Icons.circle,
-                        color: Colors.green,
+                        color: getColorStatus(devicesProvider.websocketConnection),
                       )
                     ],
                   ),
@@ -53,8 +92,10 @@ class _DeviceDetail extends StatelessWidget {
                     children: [
                       Text('Led'),
                       Switch(
-                        value: false,
-                        onChanged: (value) {}
+                        value: led,
+                        onChanged: (value) {
+                          devicesProvider.emitLed(value);
+                        }
                       ),
                     ],
                   ),
@@ -67,17 +108,17 @@ class _DeviceDetail extends StatelessWidget {
               children: [
                 CustomPrettyGauge(
                   title: 'Luminosidad',
-                  value: 500,
+                  value: devicesProvider.luminosity,
                   maxValue: 1023,
                   unitValue: 'lm',
                   segments: [
-                    GaugeSegment('Low', 500, Colors.yellow),
-                    GaugeSegment('Medium', 1023 - 500, Colors.blueGrey),
+                    GaugeSegment('Low', devicesProvider.luminosity, Colors.yellow),
+                    GaugeSegment('Medium', 1023 - devicesProvider.luminosity, Colors.blueGrey),
                   ],
                 ),
                 CustomPrettyGauge(
                   title: 'Temperatura',
-                  value: 10,
+                  value: devicesProvider.temperature,
                   unitValue: '°',
                   segments: [
                     GaugeSegment('Low', 20, Colors.lightBlueAccent),
@@ -107,14 +148,25 @@ class _DeviceDetail extends StatelessWidget {
                     topTitles: AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                   ),
                   lineBarsData: [
                     LineChartBarData(
-                      spots: [
-                        FlSpot(1, 1),
-                        FlSpot(20, 10),
-                        FlSpot(30, 5),
-                      ]
+                      spots: devicesProvider.temperatures
+                        .map(
+                          (ts) => FlSpot(
+                            ts.time.millisecondsSinceEpoch.toDouble(),
+                            ts.data
+                          )
+                        )
+                        .toList(),
+                      // spots: [
+                      //   FlSpot(1, 1),
+                      //   FlSpot(20, 10),
+                      //   FlSpot(30, 5),
+                      // ]
                     )
                   ]
                 )
