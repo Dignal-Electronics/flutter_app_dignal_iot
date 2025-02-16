@@ -23,7 +23,7 @@ class DashboardScreen extends StatelessWidget {
 }
 
 class _DashboardBody extends StatelessWidget {
-  const _DashboardBody({super.key});
+  const _DashboardBody();
 
   @override
   Widget build(BuildContext context) {

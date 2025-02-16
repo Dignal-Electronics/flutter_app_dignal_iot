@@ -21,7 +21,6 @@ class DevicesScreen extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10.0),
             child: IconButton(
               onPressed: () {
-                print("Reload");
                 deviceProvider.getDevices();
               },
               icon: const Icon(
@@ -56,8 +55,7 @@ class DevicesScreen extends StatelessWidget {
 class CustomDeviceListTile extends StatelessWidget {
   final Device device;
 
-  const CustomDeviceListTile({Key? key, required this.device})
-      : super(key: key);
+  const CustomDeviceListTile({super.key, required this.device});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +76,7 @@ class CustomDeviceListTile extends StatelessWidget {
                 children: <Widget>[
                   ListTile(
                     leading: Icon(Icons.edit),
-                    title: Text('Edit Device'),
+                    title: Text('Editar dispositivo'),
                     onTap: () {
                       final devicesProvider =
                           Provider.of<DevicesProvider>(context, listen: false);
@@ -89,7 +87,7 @@ class CustomDeviceListTile extends StatelessWidget {
                   ),
                   ListTile(
                     leading: Icon(Icons.bar_chart_outlined),
-                    title: Text('Show Info'),
+                    title: Text('Ver detalle'),
                     onTap: () {
                       final devicesProvider =
                           Provider.of<DevicesProvider>(context, listen: false);
@@ -101,7 +99,7 @@ class CustomDeviceListTile extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.do_not_disturb_alt_rounded),
                     title: Text(
-                      'Disable Device',
+                      'Deshabilitar dispositivo',
                       style: TextStyle(color: Colors.red.shade400),
                     ),
                     onTap: () {},

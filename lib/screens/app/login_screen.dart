@@ -107,9 +107,11 @@ class LoginForm extends StatelessWidget {
                       if (loginProvider.validate()) {
                         final response = await loginProvider.login();
                         if (response) {
+                          // ignore: use_build_context_synchronously
                           Navigator.of(context)
                               .pushReplacementNamed(DashboardScreen.route);
                         } else {
+                          // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(

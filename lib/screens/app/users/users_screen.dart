@@ -22,7 +22,6 @@ class UsersScreen extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10.0),
             child: IconButton(
               onPressed: () {
-                print("Reload");
                 usersProvider.getUsers();
               },
               icon: const Icon(
@@ -41,7 +40,6 @@ class UsersScreen extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               itemCount: usersProvider.users.length,
               itemBuilder: (_, index) {
-                print(index);
                 final user = usersProvider.users[index];
                 return ListTile(
                   onTap: () {
@@ -61,7 +59,6 @@ class UsersScreen extends StatelessWidget {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  print('Cancel');
                                   Navigator.of(context).pop();
                                 },
                                 child: Text('Cancel'),

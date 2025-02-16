@@ -26,7 +26,6 @@ class DevicesProvider extends ChangeNotifier {
   }
 
   getDevices() async {
-    print('getDevices');
     _isLoading = true;
     notifyListeners();
     await Future.delayed(Duration(seconds: 3));

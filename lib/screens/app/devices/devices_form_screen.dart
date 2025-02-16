@@ -48,7 +48,7 @@ class DeviceForm extends StatelessWidget {
             initialValue: device.name,
             decoration: InputDecoration(
               border: borderInputTextDecoration,
-              labelText: 'Name',
+              labelText: 'Nombre',
               errorText: deviceForm.errors.containsKey('name')
                   ? deviceForm.errors['name'][0]
                   : null),
@@ -63,16 +63,26 @@ class DeviceForm extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          CustomButtonLoading(
-            isLoading: deviceForm.isLoading,
-            text: device.id == null ? 'Create' : 'Update',
-            onClick: () async {
-              FocusManager.instance.primaryFocus?.unfocus();
-              if (deviceForm.validate()) {
-                Navigator.of(context).pop();
-              }
-            },
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: deviceForm.isLoading
+                  ? null
+                  : () async {
+                      if (deviceForm.validate()) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+              child: deviceForm.isLoading
+                  ? Padding(
+                      padding: EdgeInsets.all(5),
+                      child: CircularProgressIndicator.adaptive(),
+                    )
+                  : Text(device.id == null ? 'Crear' : 'Actualizar', style: TextStyle(fontSize: 18),),
+            ),
           ),
+    
         ],
       ),
     );

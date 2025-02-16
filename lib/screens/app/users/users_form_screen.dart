@@ -95,15 +95,13 @@ class UserForm extends StatelessWidget {
             height: 20,
           ),
           SizedBox(
+            width: double.infinity,
+            height: 50,
             child: ElevatedButton(
               onPressed: userForm.isLoading
                   ? null
                   : () async {
                       if (userForm.validate()) {
-                        final usersProvider = Provider.of<UsersProvider>(
-                          context,
-                          listen: false,
-                        );
                         Navigator.of(context).pop();
                       }
                     },
@@ -112,7 +110,7 @@ class UserForm extends StatelessWidget {
                       padding: EdgeInsets.all(5),
                       child: CircularProgressIndicator.adaptive(),
                     )
-                  : Text(user.id == null ? 'Create' : 'Update'),
+                  : Text(user.id == null ? 'Crear' : 'Actualizar', style: TextStyle(fontSize: 18),),
             ),
           ),
         ],

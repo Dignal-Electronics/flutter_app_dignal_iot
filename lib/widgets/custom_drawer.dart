@@ -3,7 +3,7 @@ import 'package:flutter_dignal_2025/screens/app/screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({Key? key}) : super(key: key);
+  const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +47,7 @@ class CustomDrawer extends StatelessWidget {
               await prefs.remove('user');
               await prefs.remove('username');
               await prefs.remove('id');
+              // ignore: use_build_context_synchronously
               Navigator.of(context).pushReplacementNamed(LoginScreen.route);
             },
           ),

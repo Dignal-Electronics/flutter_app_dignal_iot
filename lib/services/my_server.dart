@@ -113,7 +113,6 @@ class MyServer {
   }
 
   Future<bool> updateUser(User user) async {
-    print('${user.username} - ${user.name} - ${user.password}');
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final url = Uri.http(_baseUrlApi, '/api/users/${user.id}');
@@ -137,7 +136,6 @@ class MyServer {
   }
 
   Future<bool> enableDisableUser(User user) async {
-    print('${user.username} - ${user.name} - ${user.password}');
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final url = Uri.http(_baseUrlApi, '/api/users/${user.id}');

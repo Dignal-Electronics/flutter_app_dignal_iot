@@ -27,7 +27,6 @@ class UsersProvider extends ChangeNotifier {
   // List<User> users = [];
 
   getUsers() async {
-    print('getUsers');
     _isLoading = true;
     notifyListeners();
     await Future.delayed(Duration(seconds: 3));

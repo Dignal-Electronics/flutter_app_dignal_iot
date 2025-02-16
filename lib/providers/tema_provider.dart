@@ -7,8 +7,6 @@ class TemaProvider with ChangeNotifier {
 
   set modoLight(bool valor) {
     _modoLight = valor;
-    print('Cambiando valor del tema');
-    print(_modoLight);
     notifyListeners();
   }
 }
