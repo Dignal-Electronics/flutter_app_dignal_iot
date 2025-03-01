@@ -10,6 +10,53 @@ class DevicesDetailScreen extends StatelessWidget {
 
   static String route = "/app-devices-detail";
 
+
+  void _showModalBottomOpenai(BuildContext context) {
+
+    final devicesProvider = Provider.of<DevicesProvider>(context, listen: false);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: ListView.builder(
+              itemCount: devicesProvider.messagesOpenai.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.grey.shade700
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          devicesProvider.messagesOpenai[index]!.date,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        SizedBox(height: 10,),
+                        Text(
+                          devicesProvider.messagesOpenai[index]!.text,
+                          style: TextStyle(fontSize: 17),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -19,6 +66,14 @@ class DevicesDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dispositivo: ${devicesProvider.selectedDevice.key}'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _showModalBottomOpenai(context);
+            },
+            icon: Icon(Icons.terminal)
+          )
+        ],
       ),
       body: _DeviceDetail(),
     );
@@ -106,27 +161,31 @@ class _DeviceDetail extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                CustomPrettyGauge(
-                  title: 'Luminosidad',
-                  value: devicesProvider.luminosity,
-                  maxValue: 1023,
-                  unitValue: 'lm',
-                  segments: [
-                    GaugeSegment('Low', devicesProvider.luminosity, Colors.yellow),
-                    GaugeSegment('Medium', 1023 - devicesProvider.luminosity, Colors.blueGrey),
-                  ],
+                Expanded(
+                  child: CustomPrettyGauge(
+                    title: 'Luminosidad',
+                    value: devicesProvider.luminosity,
+                    maxValue: 1023,
+                    unitValue: 'lm',
+                    segments: [
+                      GaugeSegment('Low', devicesProvider.luminosity, Colors.yellow),
+                      GaugeSegment('Medium', 1023 - devicesProvider.luminosity, Colors.blueGrey),
+                    ],
+                  ),
                 ),
-                CustomPrettyGauge(
-                  title: 'Temperatura',
-                  value: devicesProvider.temperature,
-                  unitValue: '°',
-                  segments: [
-                    GaugeSegment('Low', 20, Colors.lightBlueAccent),
-                    GaugeSegment('Low', 20, Colors.yellow),
-                    GaugeSegment('Low', 20, Colors.green),
-                    GaugeSegment('Low', 20, Colors.orange),
-                    GaugeSegment('Medium', 20, Colors.red),
-                  ],
+                Expanded(
+                  child: CustomPrettyGauge(
+                    title: 'Temperatura',
+                    value: devicesProvider.temperature,
+                    unitValue: '°',
+                    segments: [
+                      GaugeSegment('Low', 20, Colors.lightBlueAccent),
+                      GaugeSegment('Low', 20, Colors.yellow),
+                      GaugeSegment('Low', 20, Colors.green),
+                      GaugeSegment('Low', 20, Colors.orange),
+                      GaugeSegment('Medium', 20, Colors.red),
+                    ],
+                  ),
                 ),
               ],
             ),

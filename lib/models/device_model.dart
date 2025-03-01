@@ -35,3 +35,19 @@ class Device {
         "active": "$active",
       };
 }
+
+
+class OpenaiMessage {
+  String date;
+  String text;
+
+  OpenaiMessage({
+    required this.date,
+    required this.text
+  });
+
+  factory OpenaiMessage.fromJson(Map<String, String> json) => OpenaiMessage(
+    date: json['date'] ?? '-',
+    text: json['text'] ?? '-'
+  );
+}

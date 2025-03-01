@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -30,6 +31,22 @@ class DevicesProvider extends ChangeNotifier {
   ];
   bool led = false;
   final socket = MyServer().socket;
+
+
+  /// Ejemplo del tipo de variable
+  /// [
+  ///    {
+  ///      'date': '2025-03-01'
+  ///      'text': 'message from openai'
+  ///    }
+  /// ]
+  ///
+  List<OpenaiMessage?> messagesOpenai = [
+    OpenaiMessage(
+      date: '2025-03-01 10:10:10',
+      text: 'Mensaje de prueba.'
+    )
+  ];
 
   get isLoading => _isLoading;
   set isLoading(val) {
@@ -76,17 +93,17 @@ class DevicesProvider extends ChangeNotifier {
 
     socket.on('luminosidad', (data) {
       // Asignamos el valor recibido del dispositivo
-      luminosity = data['value'];
+      luminosity = data['value'].toDouble();
       // Notificamos a todos los puntos donde se use este valor,
       // que el mismo se ha actualizado.
       notifyListeners();
     });
 
     socket.on('temperatura', (temp) {
-      temperature = temp['value'];
+      temperature = temp['value'].toDouble();
 
       temperatures.add(
-        TemperatureSerie(time: DateTime.now(), data: temp['value'])
+        TemperatureSerie(time: DateTime.now(), data: temp['value'].toDouble())
       );
 
       notifyListeners();
@@ -95,6 +112,13 @@ class DevicesProvider extends ChangeNotifier {
     socket.on('led', (data) {
       led = data['value'];
       notifyListeners();
+    });
+
+    socket.on('openaiResponse', (data) {
+      print('socket openaiResponse');
+      messagesOpenai.add(
+        OpenaiMessage.fromJson(json.decode(data))
+      );
     });
   }
 

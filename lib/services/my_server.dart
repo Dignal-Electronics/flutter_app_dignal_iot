@@ -5,6 +5,9 @@ import 'package:flutter_dignal_2025/models/models.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class MyServer {
+  // Emulador Android
+  // static String server = "10.0.2.2";
+  // Emulador Chrome
   static String server = "localhost";
   static String portApi = "88";
   static String portSocket = '3000';

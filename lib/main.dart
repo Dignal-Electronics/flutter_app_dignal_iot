@@ -33,6 +33,8 @@ class MyApp extends StatelessWidget {
  
         theme: ThemeData.dark(),
 
+        debugShowCheckedModeBanner: false,
+
         initialRoute: LoginScreen.route,
         routes: {
           //Pantallas de Aplicacion
