@@ -31,6 +31,7 @@ class DevicesProvider extends ChangeNotifier {
   ];
   bool led = false;
   final socket = MyServer().socket;
+  int notificationCounter = 0;
 
 
   /// Ejemplo del tipo de variable
@@ -41,12 +42,7 @@ class DevicesProvider extends ChangeNotifier {
   ///    }
   /// ]
   ///
-  List<OpenaiMessage?> messagesOpenai = [
-    OpenaiMessage(
-      date: '2025-03-01 10:10:10',
-      text: 'Mensaje de prueba.'
-    )
-  ];
+  List<OpenaiMessage?> messagesOpenai = [];
 
   get isLoading => _isLoading;
   set isLoading(val) {
@@ -117,8 +113,14 @@ class DevicesProvider extends ChangeNotifier {
     socket.on('openaiResponse', (data) {
       print('socket openaiResponse');
       messagesOpenai.add(
-        OpenaiMessage.fromJson(json.decode(data))
+        OpenaiMessage.fromJson(data)
       );
+
+      // notificationCounter = notificationCounter + 1;
+      // notificationCounter++;
+      notificationCounter += 1;
+
+      notifyListeners();
     });
   }
 

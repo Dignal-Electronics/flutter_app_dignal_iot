@@ -46,7 +46,7 @@ class OpenaiMessage {
     required this.text
   });
 
-  factory OpenaiMessage.fromJson(Map<String, String> json) => OpenaiMessage(
+  factory OpenaiMessage.fromJson(Map<String, dynamic> json) => OpenaiMessage(
     date: json['date'] ?? '-',
     text: json['text'] ?? '-'
   );
