@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dignal_2025/providers/devices_provider.dart';
+import 'package:flutter_dignal_2025/services/my_server.dart';
 import 'package:flutter_dignal_2025/widgets/custom_pretty_gauge.dart';
 import 'package:flutter_dignal_2025/widgets/icon_buttom_notification.dart';
 import 'package:flutter_dignal_2025/widgets/modal_bottom_sheet_messages.dart';
@@ -25,7 +26,10 @@ class DevicesDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final devicesProvider = Provider.of<DevicesProvider>(context, listen: true);
+    final devicesProvider = Provider.of<DevicesProvider>(context, listen: false);
+    final socket = MyServer().socket;
+
+    devicesProvider.globalSocket = socket.connect();
     devicesProvider.initSocket();
 
     return Scaffold(
@@ -38,6 +42,15 @@ class DevicesDetailScreen extends StatelessWidget {
             },
           )
         ],
+        leading: IconButton(
+          onPressed: () {
+
+            socket.dispose();
+
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_sharp)
+        ),
       ),
       body: _DeviceDetail(),
     );

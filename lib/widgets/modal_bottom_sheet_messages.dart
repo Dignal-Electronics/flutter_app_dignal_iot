@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dignal_2025/providers/devices_provider.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
 class ModalBottomSheetMessages extends StatefulWidget {
@@ -38,9 +39,13 @@ class _ModalBottomSheetMessagesState extends State<ModalBottomSheetMessages> {
                       style: TextStyle(fontSize: 14),
                     ),
                     SizedBox(height: 10,),
-                    Text(
-                      devicesProvider.messagesOpenai[index]!.text,
-                      style: TextStyle(fontSize: 17),
+                    // Text(
+                    //   devicesProvider.messagesOpenai[index]!.text,
+                    //   style: TextStyle(fontSize: 17),
+                    // )
+                    SizedBox(
+                      height: 400,
+                      child: Markdown(data: devicesProvider.messagesOpenai[index]!.text)
                     )
                   ],
                 ),

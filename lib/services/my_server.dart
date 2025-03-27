@@ -8,8 +8,11 @@ class MyServer {
   // Emulador Android
   // static String server = "10.0.2.2";
   // Emulador Chrome
-  static String server = "localhost";
-  static String portApi = "88";
+  // static String server = "localhost";
+  // static String server = "34.29.189.211";
+  static String server = "34.136.225.80";
+
+  static String portApi = "2213";
   static String portSocket = '3000';
   static final String _baseUrlApi = "$server:$portApi";
   IO.Socket socket = IO.io(

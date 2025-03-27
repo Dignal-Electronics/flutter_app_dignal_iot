@@ -1,12 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dignal_2025/models/models.dart';
 import 'package:flutter_dignal_2025/screens/app/screens.dart';
 import 'package:flutter_dignal_2025/services/my_server.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-
 
 enum WebsocketConnectionStatus {
   online,
@@ -30,9 +26,8 @@ class DevicesProvider extends ChangeNotifier {
     TemperatureSerie(time: DateTime.now(), data: 0)
   ];
   bool led = false;
-  final socket = MyServer().socket;
+  late IO.Socket globalSocket;
   int notificationCounter = 0;
-
 
   /// Ejemplo del tipo de variable
   /// [
@@ -68,26 +63,24 @@ class DevicesProvider extends ChangeNotifier {
 
 
   void initSocket() {
-    // Establecemos la conexión con el websocket.
-    socket.connect();
 
-    socket.onConnect((_) {
+    globalSocket.onConnect((_) {
       print('Websocket conectado');
 
-      socket.emit('devices', selectedDevice.key);
+      globalSocket.emit('devices', selectedDevice.key);
       websocketConnection = WebsocketConnectionStatus.online;
       notifyListeners();
       emitLed(false);
     });
 
-    socket.onDisconnect((_) {
+    globalSocket.onDisconnect((_) {
       print('Websocket desconectado');
 
       websocketConnection = WebsocketConnectionStatus.offline;
       notifyListeners();
     });
 
-    socket.on('luminosidad', (data) {
+    globalSocket.on('luminosidad', (data) {
       // Asignamos el valor recibido del dispositivo
       luminosity = data['value'].toDouble();
       // Notificamos a todos los puntos donde se use este valor,
@@ -95,7 +88,7 @@ class DevicesProvider extends ChangeNotifier {
       notifyListeners();
     });
 
-    socket.on('temperatura', (temp) {
+    globalSocket.on('temperatura', (temp) {
       temperature = temp['value'].toDouble();
 
       temperatures.add(
@@ -105,12 +98,16 @@ class DevicesProvider extends ChangeNotifier {
       notifyListeners();
     });
 
-    socket.on('led', (data) {
-      led = data['value'];
-      notifyListeners();
+    globalSocket.on('led', (data) {
+
+      if (data['value'] != null) {
+        led = data['value'];
+        notifyListeners();
+      }
+
     });
 
-    socket.on('openaiResponse', (data) {
+    globalSocket.on('openaiResponse', (data) {
       print('socket openaiResponse');
       messagesOpenai.add(
         OpenaiMessage.fromJson(data)
@@ -127,9 +124,9 @@ class DevicesProvider extends ChangeNotifier {
   emitLed(status) {
     led = status;
 
-    print('***IO.socker $socket');
+    print('***IO.socker $globalSocket');
 
-    socket?.emit('led', status);
+    globalSocket.emit('led', status ? 1 : 0);
     notifyListeners();
 
     print('led $status');
